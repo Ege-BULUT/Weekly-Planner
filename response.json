@@ -1,0 +1,10 @@
+{
+  "document_reports": [
+    {
+      "document_title": "Kan Tahlili Raporu",
+      "document_summary": "Kolesterol (LDL: 119.6, Toplam: 210), Trigliserid (277) ve \u00dcrik Asit (8.1) y\u00fcksek. HDL d\u00fc\u015f\u00fck (35). ALT (52) y\u00fckselmi\u015f ve CRP de\u011feri hafif\u00e7e y\u00fcksek (6.9). Glukoz (95) normal seviyede. Demir normal (55), Demir Ba\u011flama Normal (240). TSH ve Free T4 normal s\u0131n\u0131rlarda. Hemogram, alb\u00fcmin, kreatinin ve elektrolitler genellikle normal."
+    }
+  ],
+  "generated_system_prompt": "Kullan\u0131c\u0131n\u0131n kan tahlili sonu\u00e7lar\u0131 ve sa\u011fl\u0131k durumu g\u00f6z \u00f6n\u00fcnde bulundurularak, haftal\u0131k planlanan diyet program\u0131 olu\u015fturulmal\u0131d\u0131r. Diyet program\u0131, y\u00fcksek kolesterol ve trigliserid seviyeleri, d\u00fc\u015f\u00fck HDL de\u011feri, y\u00fckselmi\u015f ALT ve \u00fcrik asit seviyeleri dikkate al\u0131narak tasarlanmal\u0131d\u0131r. Kullan\u0131c\u0131n\u0131n d\u00fc\u015f\u00fck fiziksel aktivite seviyesi, g\u00fcnde 12-16 saat bilgisayar ba\u015f\u0131nda \u00e7al\u0131\u015fmas\u0131 ve haftada ortalama 1000 ad\u0131m atmas\u0131 g\u00f6z \u00f6n\u00fcne al\u0131narak kalori al\u0131m\u0131 ve makro besin da\u011f\u0131l\u0131m\u0131 planlanmal\u0131d\u0131r. Diyette sevmedi\u011fi g\u0131dalardan kabak, kereviz ve p\u0131rasa bulunmamal\u0131d\u0131r. G\u00fcnl\u00fck kalori al\u0131m\u0131 kullan\u0131c\u0131n\u0131n boyu (173 cm), kilosu (96 kg) ve genel sa\u011fl\u0131k durumu de\u011ferlendirilerek hesaplanmal\u0131d\u0131r.",
+  "system_prompt_summary": "Bu sistem, kullan\u0131c\u0131n\u0131n sa\u011fl\u0131k verilerini g\u00f6z \u00f6n\u00fcnde bulundurarak, sa\u011fl\u0131kl\u0131 bir diyet olu\u015fturmay\u0131 hedefler. Y\u00fcksek kolesterol ve trigliserid, d\u00fc\u015f\u00fck fiziksel aktivite gibi durumlar i\u00e7in \u00f6zel d\u00fczenlemeler dahil edilmi\u015ftir."
+}

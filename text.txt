@@ -1,0 +1,4 @@
+Sevmediğim gıdalar diyetimde bulunmamalıdır: Kabak, Kereviz, Pırasa
+Fiziksel Aktivite: günde 12-16 saat bilgisayar başında çalışıyorum, haftada toplam adım sayım ortalama 1000 civarıdır, günde 200-300 adım civarı atıyorum, çok düşük fiziksel aktiviteye uygun bir diyet hazırlanmalı.
+boy: 173 cm
+kilo: 96 kg

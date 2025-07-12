@@ -13,15 +13,41 @@ st.title("📅 Diyet Planı")
 Path("db").mkdir(parents=True, exist_ok=True)
 Path("temp").mkdir(parents=True, exist_ok=True)  # geçici klasörü oluştur
 
-# Tarihli JSON dosyasını kontrol et
-debugun = datetime.now().strftime("%d-%m-%Y")
-dosya_adi = f"diet_plan_{debugun}.json"
+# db klasörünü diet_plan dosyaları için kontrol et
+path = Path("db")
+if not path.exists():
+    os.makedirs(path)
+else:
+    # db klasöründe diet_plan_ ile başlayan dosyaları kontrol et
+    existing_files = [f for f in os.listdir(path) if f.startswith("diet_plan_") and f.endswith(".json")]
+
+bugun = datetime.now().strftime("%d-%m-%Y")
+dosya_adi = f"diet_plan_{bugun}.json"
+counter = 0
+if dosya_adi in existing_files:
+    while dosya_adi in existing_files:
+        counter += 1
+        dosya_adi = f"diet_plan_{bugun}_{counter}.json"
 dosya_yolu = Path("db") / dosya_adi
 
-if not dosya_yolu.exists():
-    st.warning("Henüz bir diyet planı oluşturulmamış.")
+if len(existing_files) < 1 or st.toggle("yeni plan oluştur", key="plan_olustur", value=False):
+    st.write("dosya yolu:", dosya_yolu)
+    #st.warning("Henüz bir diyet planı oluşturulmamış.")        
     if st.button("🛠️ Hemen Oluştur"):
         st.session_state["plan_olustur"] = True
+
+else:
+    # get all files in db/ folder that start with "diet_plan_"
+    existing_files = [f for f in os.listdir("db") if f.startswith("diet_plan_") and f.endswith(".json")]
+    if existing_files:
+        selected_plan = st.selectbox(
+            "📂 Mevcut Diyet Planları",
+            options=existing_files,
+            index=0,
+            key="existing_diet_plans",
+            help="Mevcut diyet planlarınızı buradan seçebilirsiniz."
+        )
+        st.session_state["selected_plan"] = selected_plan
 
 # Plan oluşturulursa gerekli girdileri al
 if "plan_olustur" in st.session_state and st.session_state.plan_olustur:
@@ -105,7 +131,9 @@ if "plan_olustur" in st.session_state and st.session_state.plan_olustur:
         st.rerun()
 
 # JSON dosyası varsa, detayları göster
-if dosya_yolu.exists():
+if dosya_yolu.exists() or "selected_plan" in st.session_state:
+    if "selected_plan" in st.session_state:
+        dosya_yolu = Path("db") / st.session_state.selected_plan
     with open(dosya_yolu, encoding="utf-8") as f:
         veri = json.load(f)
 
@@ -115,6 +143,7 @@ if dosya_yolu.exists():
     st.markdown("---")
     st.subheader("📅 Diyet Planı Seçimi")
     col1, col2, col3, col4, col5 = st.columns([1, 1, 1.5, 2, 1], vertical_alignment="center")
+    placeholder_diyet = st.empty()
     with col1: st.write("Bana")
     with col2: miktar = st.number_input(" ", label_visibility="collapsed", min_value=1, max_value=30, value=7)
     with col3: periyot = st.selectbox(" ",  label_visibility="collapsed", options=["günlük", "haftalık", "aylık"])
@@ -123,14 +152,55 @@ if dosya_yolu.exists():
         if st.button("Hazırla!"):
             system_prompt = veri.get("generated_system_prompt", "")
 
+            # Diyet planı oluşturmak için OpenAI'ye isteği gönder
             second_response = openai.chat.completions.create(
                 model="gpt-4o",
-                tools=[{"type": "web_search_preview"}],
+                response_format={"type": "json_object"},
                 messages=[
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": f"Lütfen {miktar} {periyot} sürelik bir diyet programı hazırla. Market olarak sadece BİM, A101 ve ŞOK kullanılabilir. Yemek tariflerini ve market ürünlerini detaylı yaz."}
+                    {
+                        "role": "user",
+                        "content": (
+                            f"Lütfen {miktar} {periyot} sürelik bir diyet programı hazırla ve json olarak çıktı ver. "
+                            "Market olarak sadece BİM, A101 ve ŞOK kullanılabilir. "
+                            "Yemek tariflerini ve market ürünlerini detaylı yaz. "
+                            "Çıktı formatı şu olsun: "
+                            + json.dumps({
+                                "haftalar": [
+                                    {"hafta": 1,
+                                    "günler": [
+                                        {"gün": "Pazartesi",
+                                        "öğünler": [
+                                            {"öğün": "Öğle",
+                                            "yemekler": [
+                                                {
+                                                    "isim": "<yemek adı>",
+                                                    "sebep": "<diyet için neden önemli.>",
+                                                    "önem": "3/5",
+                                                    "alinacak_malzemeler": [
+                                                        {
+                                                            "ürün": "<ürün adı>",
+                                                            "marka": "<ürün markası>",
+                                                            "miktar": "<miktar> g",
+                                                            "market": "<BİM/A101/ŞOK>"
+                                                        }
+                                                    ],
+                                                    "tarif": [
+                                                        "<tarif adımı 1>",
+                                                        "<tarif adımı 2>",
+                                                    ]
+                                                }
+                                            ]}
+                                        ]}
+                                    ]}
+                                ]
+                            })
+                        )
+                    }
                 ]
             )
-
-            st.markdown("### ✅ Oluşan Diyet Planı:")
-            st.json(second_response)
+            placeholder_diyet.markdown("### ✅ Oluşan Diyet Planı:")
+            placeholder_diyet.write(second_response)
+            response2_raw = json.loads(second_response.choices[0].message.content)
+            placeholder_diyet.write(response2_raw)
+            json.dump(response2_raw, open("second_response.json", "w"), indent=2)

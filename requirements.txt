@@ -1,2 +1,4 @@
 streamlit
 openai
+streamlit_extras
+pathlib

@@ -94,7 +94,7 @@ def main():
     with extra_col.container(border=True):
         st.subheader("Extra Column", divider="blue", )
         
-        editable = st.toggle("Edit Items")
+        editable = st.toggle("Edit Items", value=True)
         if st.button("Add Task"):
             add_task()            
         if st.button("Remove Task"):
